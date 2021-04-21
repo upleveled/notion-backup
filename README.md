@@ -8,7 +8,7 @@
 2. Edit `index.js` to add the Notion pages you want to export to the `blocks` array at the top of the file
 3. Optional: Edit `index.js` to specify a different export format, time zone or locale
 4. Optional: Edit `.github/workflows/export-notion-blocks-and-commit.yml` to specify a different schedule (default is once per day)
-5. Create a new repo secret called `NOTION_TOKEN` with the instructions in [this article](https://artur-en.medium.com/automated-notion-backups-f6af4edc298d)
+5. Create a new repo secret under Settings -> Secrets called `NOTION_TOKEN` with the instructions in [this article](https://artur-en.medium.com/automated-notion-backups-f6af4edc298d)
 6. After the action has run, check the `exports` folder to verify that the action is running correctly
 
 ## How
