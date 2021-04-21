@@ -1,0 +1,6 @@
+.eslintrc.js
+*.config.js
+build
+
+# Next.js build folder
+.next

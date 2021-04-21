@@ -1,25 +1,25 @@
-# Notion Guardian
+# `notion-backup`
 
-A tool that automatically backups your [Notion](notion.so) workspace and commits changes to another repository.
+> Export [Notion](https://www.notion.so/) pages and subpages to a GitHub repo on a schedule (eg. to be used as a scheduled backup)
 
-Notion Guardian offers a quick way to setup a secure backup of your data in a private repository — allowing you to track how your notes change over time and to know that your data is safe.
+## Setup
 
-The tool separates the logic for running the export and the actual workspace data into two repositories. This way your backups are not cluttered with other scripts.
+1. Fork this repository and make your fork private
+2. Edit `index.js` to add the Notion pages you want to export to the `blocks` array at the top of the file
+3. Optional: Edit `index.js` to specify a different export format, time zone or locale
+4. Create a new repo secret called `NOTION_TOKEN` with the instructions in [this article](https://artur-en.medium.com/automated-notion-backups-f6af4edc298d)
+5. Click on the Actions tab at the top and enable actions
+6. On the left sidebar click the "Export Notion Blocks and Commit to Git" workflow and enable Scheduled Actions (there should be a notification that they are disabled)
+7. After the action has run, check the `exports` folder to verify that the action is running correctly
 
-## How to setup
+## How
 
-1. Create a separate private repository for your backups to live in (e.g. "my-notion-backup"). Make sure you create a `main` branch — for example by clicking "Add a README file" when creating the repo.
-2. Fork this repository ("notion-guardian").
-3. Create a Personal Access Token ([docs](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token)) with the "repo" scope and store it as `REPO_PERSONAL_ACCESS_TOKEN` in the secrets of the forked repo.
-4. Store your GitHub username in the `REPO_USERNAME` secret.
-5. Store the name of your newly created private repo in the `REPO_NAME` secret (in this case "my-notion-backup").
-6. Store the email that should be used to commit changes (usually your GitHub account email) in the `REPO_EMAIL` secret.
-7. Obtain your Notion space-id and token as described [in this Medium post](https://medium.com/@arturburtsev/automated-notion-backups-f6af4edc298d). Store it in the `NOTION_SPACE_ID` and `NOTION_TOKEN` secret.
-8. Click the "Actions" tab on the forked repo and enable actions by clicking the button.
-9. On the left sidebar click the "Backup Notion Workspace" workflow. A notice will tell you that "Scheduled Actions" are disabled, so go ahead and click the button to enable them.
-10. Wait until the action runs for the first time or push a commit to the repo to trigger the first backup.
-11. Check your private repo to see that an automatic commit with your Notion workspace data has been made. Done 🙌
+The GitHub Actions workflow is scheduled to run once a day to:
 
-## How it works
+1. export each specified Notion block
+2. wait until each export is done
+3. download, unzip and commit the content from each export to the repository
 
-This repo contains a GitHub workflow that runs every hour and for every push to this repo. The workflow will execute the script which makes an export request to Notion, waits for it to finish and downloads the workspace content to a temporary directory. The workflow will then commit this directory to the repository configured in the repo secrets.
+## Credit
+
+This script is heavily based on [`notion-guardian`](https://github.com/richartkeil/notion-guardian) by [@richartkeil](https://github.com/richartkeil).
