@@ -4,7 +4,7 @@
 
 ## Setup
 
-1. Click on the green "Use this template" button at the top to make your own copy of this repository - make sure to choose "Private", unless you want to publicize your Notion content
+1. Click on the green "Use this template" button at the top to make your own copy of this repository - make sure to choose "Private" visibility, unless you want to make your Notion content visible to the public
 2. Edit `index.js` to add the Notion pages you want to export to the `blocks` array at the top of the file
 3. Optional: Edit `index.js` to specify a different export format, time zone or locale
 4. Optional: Edit `.github/workflows/export-notion-blocks-and-commit.yml` to specify a different schedule (default is once per day)
