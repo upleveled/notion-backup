@@ -22,4 +22,4 @@ The GitHub Actions workflow is scheduled to run once a day to:
 
 ## Credit
 
-This script is heavily based on [`notion-guardian`](https://github.com/richartkeil/notion-guardian) by [@richartkeil](https://github.com/richartkeil).
+This script is heavily based on [`notion-guardian`](https://github.com/richartkeil/notion-guardian), thanks to [@richartkeil](https://github.com/richartkeil)!
