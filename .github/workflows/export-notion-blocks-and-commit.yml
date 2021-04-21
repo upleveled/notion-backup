@@ -8,9 +8,9 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  backup:
+  export-notion-blocks-and-commit:
     runs-on: ubuntu-latest
-    name: Backup
+    name: Export Notion Blocks and Commit to Git
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v2
