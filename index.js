@@ -57,7 +57,7 @@ const client = axios.create({
 });
 
 async function delay(/** @type {number} */ ms) {
-  console.log(`Waiting ${ms / 1000} seconds before polling again...`);
+  console.log(`Waiting ${ms / 1000} second before polling again...`);
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
@@ -181,7 +181,7 @@ while (true) {
   }
 
   // Rate limit polling
-  await delay(30000);
+  await delay(1000);
 }
 
 console.log('✅ All exports successful');
