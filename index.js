@@ -1,8 +1,8 @@
+import { createWriteStream, mkdirSync, rmSync, unlinkSync } from 'node:fs';
+import path from 'node:path';
 import axios from 'axios';
 import extract from 'extract-zip';
-import { createWriteStream, mkdirSync, rmSync, unlinkSync } from 'fs';
 import pMap from 'p-map';
-import path from 'path';
 
 const blocks = [
   {
