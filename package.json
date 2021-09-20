@@ -20,6 +20,7 @@
     "@typescript-eslint/eslint-plugin": "4.31.1",
     "@typescript-eslint/parser": "4.31.1",
     "@upleveled/eslint-config-upleveled": "1.17.1",
+    "@upleveled/eslint-plugin-upleveled": "^1.1.0",
     "babel-eslint": "10.1.0",
     "eslint": "7.32.0",
     "eslint-config-react-app": "6.0.0",

@@ -489,6 +489,11 @@
   resolved "https://registry.yarnpkg.com/@upleveled/eslint-config-upleveled/-/eslint-config-upleveled-1.17.1.tgz#a06599a10fa8ed3b75efc7a85cc0a58f73bccc64"
   integrity sha512-R3PCcNruNRVAcCgu1+EFRf1N9XKE9B4SpPy0mUSZFIh2PzNtLHa80lYTrXVQ7BVa3ns+D4MkZyGvXZJzCePEYA==
 
+"@upleveled/eslint-plugin-upleveled@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@upleveled/eslint-plugin-upleveled/-/eslint-plugin-upleveled-1.1.0.tgz#bbf146a307bbbd0a7d87e555b8f738dc974fe54f"
+  integrity sha512-IRJ+EWlWUmabO6DmqSsmmaRpU+JglzRNZxAcbmre9FwDQMjAT+kyfBSOlkVpR8y/oaOyxWC3pW/lytVO3cvppw==
+
 acorn-jsx@^5.3.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.1.tgz#fc8661e11b7ac1539c47dbfea2e72b3af34d267b"
