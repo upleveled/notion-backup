@@ -10,7 +10,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "axios": "0.22.0",
+    "axios": "0.21.4",
     "extract-zip": "2.0.1",
     "p-map": "5.1.0"
   },
