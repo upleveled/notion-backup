@@ -152,16 +152,15 @@ while (true) {
 
       console.log(`Export finished for ${block.dirName}`);
 
+      /** @type {import('axios').AxiosResponse<import('node:stream').Stream>} */
       const response =
         // We need this cast because of how axios@0.22.0 and axios@0.23.0 are typed
         // https://github.com/axios/axios/issues/4176
-        /** @type {import('axios').AxiosResponse<import('node:stream').Stream>} */ (
-          await client({
-            method: 'GET',
-            url: block.task.status.exportURL || undefined,
-            responseType: 'stream',
-          })
-        );
+        await client({
+          method: 'GET',
+          url: block.task.status.exportURL || undefined,
+          responseType: 'stream',
+        });
 
       const sizeInMb = Number(response.headers['content-length']) / 1000 / 1000;
       console.log(`Downloading ${Math.round(sizeInMb * 1000) / 1000}mb...`);
