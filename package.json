@@ -12,13 +12,13 @@
   "dependencies": {
     "axios": "0.23.0",
     "extract-zip": "2.0.1",
-    "p-map": "5.1.0"
+    "p-map": "5.2.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "11.1.2",
-    "@types/node": "16.11.2",
-    "@typescript-eslint/eslint-plugin": "5.1.0",
-    "@typescript-eslint/parser": "5.1.0",
+    "@types/node": "16.11.6",
+    "@typescript-eslint/eslint-plugin": "5.2.0",
+    "@typescript-eslint/parser": "5.2.0",
     "@upleveled/eslint-config-upleveled": "1.18.0",
     "@upleveled/eslint-plugin-upleveled": "2.0.0",
     "babel-eslint": "10.1.0",
