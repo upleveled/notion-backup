@@ -16,11 +16,11 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "12.0.4",
-    "@types/node": "16.11.10",
-    "@typescript-eslint/eslint-plugin": "5.4.0",
-    "@typescript-eslint/parser": "5.4.0",
-    "@upleveled/eslint-config-upleveled": "2.0.0",
-    "@upleveled/eslint-plugin-upleveled": "2.0.0",
+    "@types/node": "16.11.11",
+    "@typescript-eslint/eslint-plugin": "5.5.0",
+    "@typescript-eslint/parser": "5.5.0",
+    "@upleveled/eslint-config-upleveled": "2.0.1",
+    "@upleveled/eslint-plugin-upleveled": "2.0.1",
     "babel-eslint": "10.1.0",
     "eslint": "8.3.0",
     "eslint-config-react-app": "6.0.0",
@@ -32,7 +32,7 @@
     "eslint-plugin-jsx-a11y": "6.5.1",
     "eslint-plugin-react": "7.27.1",
     "eslint-plugin-react-hooks": "4.3.0",
-    "eslint-plugin-testing-library": "5.0.0",
+    "eslint-plugin-testing-library": "5.0.1",
     "eslint-plugin-unicorn": "39.0.0",
     "typescript": "4.5.2"
   }
