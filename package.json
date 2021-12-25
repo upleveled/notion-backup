@@ -35,5 +35,10 @@
     "eslint-plugin-testing-library": "5.0.1",
     "eslint-plugin-unicorn": "39.0.0",
     "typescript": "4.5.4"
+  },
+  "resolutions": {
+    "@typescript-eslint/eslint-plugin": "5.8.0",
+    "@typescript-eslint/parser": "5.8.0",
+    "eslint-plugin-react": "7.28.0"
   }
 }
