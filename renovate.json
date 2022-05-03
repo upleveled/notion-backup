@@ -1,5 +1,5 @@
 {
   "extends": [
-    "github>karlhorky/renovate-config"
+    "github>karlhorky/renovate-config:default.json5"
   ]
 }
