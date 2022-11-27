@@ -9,20 +9,20 @@ on:
 
 jobs:
   export-notion-blocks-and-commit:
-    runs-on: ubuntu-latest
     name: Export Notion Blocks and Commit to Git
-    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18'
 
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
 
       - name: Run backup script
-        run: node index.js
+        run: yarn tsx index.ts
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
 

@@ -1,5 +1,6 @@
 import { createWriteStream, mkdirSync, rmSync, unlinkSync } from 'node:fs';
 import path from 'node:path';
+import { Stream } from 'node:stream';
 import axios from 'axios';
 import extract from 'extract-zip';
 import pMap from 'p-map';
@@ -26,27 +27,23 @@ if (!process.env.NOTION_TOKEN) {
   process.exit(1);
 }
 
-/**
- * @typedef {{
- *   id: string;
- *   state: string | null;
- *   status: {
- *     pagesExported: number | null;
- *     exportURL: string | null;
- *   };
- * }} BlockTask
- */
+type BlockTask = {
+  id: string;
+  state: string | null;
+  status: {
+    pagesExported: number | null;
+    exportURL: string | null;
+  };
+};
 
-/**
- * @typedef {{
- *   id: string;
- *   state: string | null;
- *   status?: {
- *     pagesExported: number | null;
- *     exportURL: string | null;
- *   };
- * }} Task
- */
+type Task = {
+  id: string;
+  state: string | null;
+  status?: {
+    pagesExported: number | null;
+    exportURL: string | null;
+  };
+};
 
 const client = axios.create({
   // Notion unofficial API
@@ -56,7 +53,7 @@ const client = axios.create({
   },
 });
 
-function delay(/** @type {number} */ ms) {
+function delay(ms: number) {
   console.log(`Waiting ${ms / 1000} second before polling again...`);
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
@@ -66,10 +63,9 @@ function delay(/** @type {number} */ ms) {
 // Enqueue all export tasks immediately, without
 // waiting for the export tasks to complete
 const enqueuedBlocks = await pMap(blocks, async (block) => {
-  /** @type {{ data: { taskId: string } }} */
   const {
     data: { taskId },
-  } = await client.post('enqueueTask', {
+  }: { data: { taskId: string } } = await client.post('enqueueTask', {
     task: {
       eventName: 'exportBlock',
       request: {
@@ -84,10 +80,13 @@ const enqueuedBlocks = await pMap(blocks, async (block) => {
     },
   });
 
+  if (!taskId) {
+    throw new Error('No taskId returned from enqueueTask');
+  }
+
   console.log(`Started export of block ${block.dirName} as task ${taskId}`);
 
-  /** @type {BlockTask} */
-  const task = {
+  const task: BlockTask = {
     id: taskId,
     state: null,
     status: {
@@ -110,31 +109,24 @@ while (true) {
 
   const taskIds = incompleteEnqueuedBlocks.map(({ task }) => task.id);
 
-  /** @type {{ data: { results: Task[] } }} */
   const {
     data: { results },
-  } = await client.post('getTasks', {
+  }: { data: { results: Task[] } } = await client.post('getTasks', {
     taskIds: taskIds,
   });
 
-  const blocksWithTaskProgress = results.reduce(
-    (
-      /** @type {typeof incompleteEnqueuedBlocks} */ blocksAcc,
-      /** @type {Task} */ task,
-    ) => {
-      const block = enqueuedBlocks.find(({ task: { id } }) => id === task.id);
+  const blocksWithTaskProgress = results.reduce((blocksAcc, task) => {
+    const block = enqueuedBlocks.find(({ task: { id } }) => id === task.id);
 
-      if (!block || !task.status) return blocksAcc;
+    if (!block || !task.status) return blocksAcc;
 
-      // Mutate original object in enqueuedBlocks for while loop exit condition
-      block.task.state = task.state;
-      block.task.status.pagesExported = task.status.pagesExported;
-      block.task.status.exportURL = task.status.exportURL;
+    // Mutate original object in enqueuedBlocks for while loop exit condition
+    block.task.state = task.state;
+    block.task.status.pagesExported = task.status.pagesExported;
+    block.task.status.exportURL = task.status.exportURL;
 
-      return blocksAcc.concat(block);
-    },
-    /** @type {typeof incompleteEnqueuedBlocks} */ [],
-  );
+    return blocksAcc.concat(block);
+  }, [] as typeof incompleteEnqueuedBlocks);
 
   for (const block of blocksWithTaskProgress) {
     console.log(
@@ -152,15 +144,11 @@ while (true) {
 
       console.log(`Export finished for ${block.dirName}`);
 
-      /** @type {import('axios').AxiosResponse<import('node:stream').Stream>} */
-      const response =
-        // We need this cast because of how axios@0.22.0 and axios@0.23.0 are typed
-        // https://github.com/axios/axios/issues/4176
-        await client({
-          method: 'GET',
-          url: block.task.status.exportURL || undefined,
-          responseType: 'stream',
-        });
+      const response = await client<Stream>({
+        method: 'GET',
+        url: block.task.status.exportURL || undefined,
+        responseType: 'stream',
+      });
 
       const sizeInMb = Number(response.headers['content-length']) / 1000 / 1000;
       console.log(`Downloading ${Math.round(sizeInMb * 1000) / 1000}mb...`);
