@@ -9,7 +9,7 @@
 3. Edit `index.js` to add the Notion pages you want to export to the `blocks` array at the top of the file
 4. Optional: Edit `index.js` to specify a different export format, time zone or locale
 5. Optional: Edit `.github/workflows/export-notion-blocks-and-commit.yml` to specify a different schedule (default is once per day)
-6. After the action has run, the `exports` folder should contain the content! 🙌
+6. After the `Export Notion Blocks and Commit to Git` workflow has run, your backup will have been committed to your GitHub repo in the `exports` folder! 🙌
 
 ## How
 
