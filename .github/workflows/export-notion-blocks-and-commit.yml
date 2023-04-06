@@ -20,7 +20,7 @@ jobs:
           node-version: '18'
 
       - name: Install deps and build (with cache)
-        uses: bahmutov/npm-install@v1
+        uses: pnpm/action-setup@v2
 
       - name: Run backup script
         run: pnpm tsx index.ts

@@ -11,6 +11,6 @@ jobs:
         with:
           node-version: '18'
       - name: Install deps and build (with cache)
-        uses: bahmutov/npm-install@v1
+      - uses: pnpm/action-setup@v2
       - run: pnpm eslint . --max-warnings 0
       - run: pnpm tsc
