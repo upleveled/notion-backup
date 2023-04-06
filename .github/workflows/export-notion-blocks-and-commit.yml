@@ -15,12 +15,13 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: '7'
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Install deps and build (with cache)
-        uses: pnpm/action-setup@v2
+          cache: 'pnpm'
 
       - name: Run backup script
         run: pnpm tsx index.ts
