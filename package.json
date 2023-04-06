@@ -16,6 +16,7 @@
     "tsx": "3.12.6"
   },
   "devDependencies": {
+    "@types/prettier": "^2.7.2",
     "@upleveled/eslint-config-upleveled": "4.0.2",
     "typescript": "5.0.3"
   }
