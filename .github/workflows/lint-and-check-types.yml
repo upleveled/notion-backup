@@ -7,7 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install deps and build (with cache)
       - uses: pnpm/action-setup@v2
         with:
           version: '7'
@@ -15,5 +14,10 @@ jobs:
         with:
           node-version: '18'
           cache: 'pnpm'
+      - name: Install deps and build (with cache)
+        run: pnpm install
       - run: pnpm eslint . --max-warnings 0
       - run: pnpm tsc
+      - run: pnpm tsc --project tsconfig.node.json --noEmit
+      - name: Build extension
+        run: pnpm build
