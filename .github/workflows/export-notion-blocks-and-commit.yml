@@ -23,7 +23,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: Run backup script
-        run: yarn tsx index.ts
+        run: pnpm tsx index.ts
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
 
