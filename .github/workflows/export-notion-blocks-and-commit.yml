@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'pnpm'
-      - name: Install deps and build (with cache)
+      - name: Install deps (with cache)
         run: pnpm install
 
       - name: Run backup script
