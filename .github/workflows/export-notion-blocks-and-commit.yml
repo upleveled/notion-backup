@@ -24,7 +24,6 @@ jobs:
           cache: 'pnpm'
       - name: Install deps and build (with cache)
         run: pnpm install
-      - run: pnpm tsc
 
       - name: Run backup script
         run: pnpm tsx index.ts
