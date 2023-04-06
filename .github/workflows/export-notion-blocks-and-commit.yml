@@ -20,7 +20,7 @@ jobs:
           version: 'latest'
       - uses: actions/setup-node@v3
         with:
-          node-version: 'lts'
+          node-version: 'lts/*'
           cache: 'pnpm'
       - name: Install deps (with cache)
         run: pnpm install
