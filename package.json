@@ -16,6 +16,7 @@
     "tsx": "3.12.6"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "7.21.3",
     "@next/eslint-plugin-next": "13.2.4",
     "@types/node": "18.15.11",
     "@types/react": "18.0.31",
@@ -24,7 +25,6 @@
     "@typescript-eslint/parser": "5.57.0",
     "@upleveled/eslint-config-upleveled": "3.20.0",
     "@upleveled/eslint-plugin-upleveled": "2.1.6",
-    "@babel/eslint-parser": "7.21.3",
     "eslint": "8.37.0",
     "eslint-config-react-app": "7.0.1",
     "eslint-import-resolver-typescript": "3.5.4",
