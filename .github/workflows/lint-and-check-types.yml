@@ -7,10 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 'latest'
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - name: Install deps and build (with cache)
-        uses: bahmutov/npm-install@v1
-      - run: yarn eslint . --max-warnings 0
-      - run: yarn tsc
+          cache: 'pnpm'
+      - name: Install deps (with cache)
+        run: pnpm install
+      - run: pnpm eslint . --max-warnings 0
+      - run: pnpm tsc

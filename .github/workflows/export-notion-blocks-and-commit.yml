@@ -15,15 +15,18 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 'latest'
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Install deps and build (with cache)
-        uses: bahmutov/npm-install@v1
+          cache: 'pnpm'
+      - name: Install deps (with cache)
+        run: pnpm install
 
       - name: Run backup script
-        run: yarn tsx index.ts
+        run: pnpm tsx index.ts
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
 
