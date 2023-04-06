@@ -16,7 +16,6 @@
     "tsx": "3.12.6"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "7.21.3",
     "@next/eslint-plugin-next": "13.2.4",
     "@types/node": "18.15.11",
     "@types/react": "18.0.31",
