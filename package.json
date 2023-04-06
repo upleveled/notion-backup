@@ -16,7 +16,6 @@
     "tsx": "3.12.6"
   },
   "devDependencies": {
-    "@types/eslint": "8.37.0",
     "@upleveled/eslint-config-upleveled": "4.0.2",
     "typescript": "5.0.3"
   }
