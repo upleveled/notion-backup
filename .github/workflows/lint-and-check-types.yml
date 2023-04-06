@@ -6,8 +6,8 @@ jobs:
     name: Lint and Check Types
     runs-on: ubuntu-latest
     steps:
-      - name: Install deps and build (with cache)
       - uses: actions/checkout@v3
+      - name: Install deps and build (with cache)
       - uses: pnpm/action-setup@v2
         with:
           version: '7'
