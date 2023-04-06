@@ -19,5 +19,3 @@ jobs:
       - run: pnpm eslint . --max-warnings 0
       - run: pnpm tsc
       - run: pnpm tsc --project tsconfig.json --noEmit
-      - name: Build extension
-        run: pnpm build
