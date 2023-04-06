@@ -6,6 +6,7 @@ jobs:
     name: Lint and Check Types
     runs-on: ubuntu-latest
     steps:
+      - name: Install deps and build (with cache)
       - uses: actions/checkout@v3
       - uses: pnpm/action-setup@v2
         with:
@@ -14,6 +15,5 @@ jobs:
         with:
           node-version: '18'
           cache: 'pnpm'
-      - name: Install deps and build (with cache)
       - run: pnpm eslint . --max-warnings 0
       - run: pnpm tsc
