@@ -117,8 +117,6 @@ while (true) {
       taskIds: taskIds,
     });
 
-  const fileToken = setCookies.find((x) => x.includes('file_token='));
-
   const blocksWithTaskProgress = results.reduce((blocksAcc, task) => {
     const block = enqueuedBlocks.find(({ task: { id } }) => id === task.id);
 
@@ -153,7 +151,9 @@ while (true) {
         url: block.task.status.exportURL || undefined,
         responseType: 'stream',
         headers: {
-          Cookie: `${fileToken}; token_v2=${process.env.NOTION_TOKEN}`,
+          Cookie: `${setCookies.find((setCookieHeader) =>
+            setCookieHeader.includes('file_token='),
+          )}; token_v2=${process.env.NOTION_TOKEN}`,
         },
       });
 
