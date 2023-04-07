@@ -111,9 +111,11 @@ while (true) {
 
   const {
     data: { results },
-  }: { data: { results: Task[] } } = await client.post('getTasks', {
-    taskIds: taskIds,
-  });
+    headers: { 'set-cookie': getTasksRequestCookies },
+  }: { data: { results: Task[] }; headers: { 'set-cookie': string[] } } =
+    await client.post('getTasks', {
+      taskIds: taskIds,
+    });
 
   const blocksWithTaskProgress = results.reduce((blocksAcc, task) => {
     const block = enqueuedBlocks.find(({ task: { id } }) => id === task.id);
@@ -148,6 +150,11 @@ while (true) {
         method: 'GET',
         url: block.task.status.exportURL || undefined,
         responseType: 'stream',
+        headers: {
+          Cookie: getTasksRequestCookies.find((cookie) =>
+            cookie.includes('file_token='),
+          ),
+        },
       });
 
       const sizeInMb = Number(response.headers['content-length']) / 1000 / 1000;
