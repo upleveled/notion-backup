@@ -111,9 +111,13 @@ while (true) {
 
   const {
     data: { results },
-  }: { data: { results: Task[] } } = await client.post('getTasks', {
-    taskIds: taskIds,
-  });
+    headers: { 'set-cookie': setCookies },
+  }: { data: { results: Task[] }; headers: { 'set-cookie': string[] } } =
+    await client.post('getTasks', {
+      taskIds: taskIds,
+    });
+
+  const fileToken = setCookies.find((x) => x.includes('file_token='));
 
   const blocksWithTaskProgress = results.reduce((blocksAcc, task) => {
     const block = enqueuedBlocks.find(({ task: { id } }) => id === task.id);
@@ -148,6 +152,9 @@ while (true) {
         method: 'GET',
         url: block.task.status.exportURL || undefined,
         responseType: 'stream',
+        headers: {
+          Cookie: `${fileToken}; token_v2=${process.env.NOTION_TOKEN}`,
+        },
       });
 
       const sizeInMb = Number(response.headers['content-length']) / 1000 / 1000;
