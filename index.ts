@@ -111,7 +111,7 @@ while (true) {
 
   const {
     data: { results },
-    headers: { 'set-cookie': setCookies },
+    headers: { 'set-cookie': setCookieHeader },
   }: { data: { results: Task[] }; headers: { 'set-cookie': string[] } } =
     await client.post('getTasks', {
       taskIds: taskIds,
@@ -151,8 +151,8 @@ while (true) {
         url: block.task.status.exportURL || undefined,
         responseType: 'stream',
         headers: {
-          Cookie: `${setCookies.find((setCookieHeader) =>
-            setCookieHeader.includes('file_token='),
+          Cookie: `${setCookieHeader.find((cookie) =>
+            cookie.includes('file_token='),
           )}; token_v2=${process.env.NOTION_TOKEN}`,
         },
       });
