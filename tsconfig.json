@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "@upleveled/eslint-config-upleveled/tsconfig.base.json",
+  "extends": "eslint-config-upleveled/tsconfig.base.json",
   "compilerOptions": {
     "target": "es2022",
     "module": "node16",
