@@ -13,6 +13,10 @@ const blocks = [
     //    (number of characters between dashes: 8-4-4-4-12)
     // 2. Inspecting network requests in the DevTools
     id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+    // Find the space ID associated with a block by running this in the DevTools
+    // Console while on the page you want to export:
+    // $('img[src*="spaceId="]').src.replace(/^.+&spaceId=([^&]+)&.+$/, '$1')
+    spaceId: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
     // Choose a directory name for your export to appear in the `exports` folder
     dirName: 'notion-page-a',
     // Should all of the subpages also be exported?
@@ -69,7 +73,10 @@ const enqueuedBlocks = await pMap(blocks, async (block) => {
     task: {
       eventName: 'exportBlock',
       request: {
-        blockId: block.id,
+        block: {
+          id: block.id,
+          spaceId: block.spaceId,
+        },
         exportOptions: {
           exportType: 'markdown',
           locale: 'en',
