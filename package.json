@@ -13,11 +13,11 @@
     "axios": "1.4.0",
     "extract-zip": "2.0.1",
     "p-map": "6.0.0",
-    "tsx": "3.12.6"
+    "tsx": "3.12.7"
   },
   "devDependencies": {
     "@types/prettier": "^2.7.2",
-    "eslint-config-upleveled": "4.1.8",
+    "eslint-config-upleveled": "4.1.9",
     "typescript": "5.0.4"
   }
 }
