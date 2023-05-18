@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@types/prettier": "^2.7.2",
-    "eslint-config-upleveled": "4.3.0",
+    "eslint-config-upleveled": "4.3.2",
     "typescript": "5.0.4"
   }
 }
