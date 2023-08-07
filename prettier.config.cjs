@@ -1,4 +1,4 @@
-/** @type {import('prettier').Options} */
+/** @type {import('prettier').Config} */
 const config = {
   singleQuote: true,
   trailingComma: 'all',
