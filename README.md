@@ -21,8 +21,8 @@ The GitHub Actions workflow is scheduled to run once a day to:
 3. download, unzip and commit the content from each export to the repository
 
 ## Related
-- [Notion Backup Enhancer](https://github.com/juba0x00/notion-backup-enhancer) - renames all files and directories within your Notion backup to human-friendly names, making it easier to understand and navigate your backup structure.
 
+- [Notion Backup Enhancer](https://github.com/juba0x00/notion-backup-enhancer) - rename files and folders after backup to remove Notion id
 
 ## Credit
 
