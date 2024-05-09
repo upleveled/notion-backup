@@ -13,10 +13,10 @@
     "axios": "1.6.8",
     "extract-zip": "2.0.1",
     "p-map": "7.0.2",
-    "tsx": "4.8.2"
+    "tsx": "4.9.3"
   },
   "devDependencies": {
-    "eslint-config-upleveled": "8.0.1",
+    "eslint-config-upleveled": "8.1.0",
     "prettier": "3.2.5",
     "typescript": "5.4.5"
   }
