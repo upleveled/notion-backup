@@ -63,7 +63,9 @@ const client = axios.create({
 });
 
 function delay(ms: number) {
-  console.log(`Waiting ${ms / 1000} second before polling again...`);
+  console.log(
+    `Waiting ${ms / 1000} second${ms > 1000 ? 's' : ''} before polling again...`,
+  );
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
