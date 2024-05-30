@@ -16,7 +16,7 @@
     "tsx": "4.11.0"
   },
   "devDependencies": {
-    "eslint-config-upleveled": "8.1.7",
+    "eslint-config-upleveled": "8.1.9",
     "prettier": "3.2.5",
     "typescript": "5.4.5"
   }
