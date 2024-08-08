@@ -13,7 +13,7 @@
     "axios": "1.7.3",
     "extract-zip": "2.0.1",
     "p-map": "7.0.2",
-    "tsx": "4.16.5"
+    "tsx": "4.17.0"
   },
   "devDependencies": {
     "eslint-config-upleveled": "8.6.14",
