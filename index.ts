@@ -55,11 +55,10 @@ type Task = {
 };
 
 for (const [spaceId, spaceBlocks] of Object.entries(
-  Object.groupBy(blocks, (block) => block.spaceId) as Record<
-    string,
-    (typeof blocks)[number][]
-  >,
+  Object.groupBy(blocks, (block) => block.spaceId),
 )) {
+  if (!spaceBlocks) continue;
+
   console.log(
     `Exporting ${spaceBlocks.length} blocks from space ${spaceId}...`,
   );
