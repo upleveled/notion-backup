@@ -81,8 +81,8 @@ for (const [spaceId, spaceBlocks] of Object.entries(
     });
   }
 
-  // Enqueue all export tasks immediately, without waiting for the
-  // export tasks to complete
+  // Enqueue all export tasks immediately, without waiting for
+  // the export tasks to complete
   const enqueuedBlocks = await pMap(spaceBlocks, async (block) => {
     const {
       data: { taskId },
@@ -152,8 +152,8 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
           if (!block || !task.status) return blocksAcc;
 
-          // Mutate original object in enqueuedBlocks for while loop
-          // exit condition
+          // Mutate original object in enqueuedBlocks for while
+          // loop exit condition
           block.task.state = task.state;
           block.task.status.pagesExported = task.status.pagesExported;
           block.task.status.exportURL = task.status.exportURL;
@@ -224,14 +224,19 @@ for (const [spaceId, spaceBlocks] of Object.entries(
       // Reset retries on success
       retries = 0;
     } catch (error) {
-      if (!axios.isAxiosError(error) || error.response?.status !== 429) {
-        // Rethrow errors which do not contain an HTTP 429 status
-        // code
+      if (
+        !axios.isAxiosError(error) ||
+        (error.response?.status && ![429, 502].includes(error.response.status))
+      ) {
+        // Rethrow errors which do not contain an HTTP 429 or 502
+        // status codes
         throw error;
       }
 
       console.log(
-        'Received response with HTTP 429 (Too Many Requests), increasing delay...',
+        error.response?.status === 429
+          ? 'Received response with HTTP 429 (Too Many Requests), increasing delay...'
+          : 'Received response with HTTP 502 (Bad Gateway), increasing delay...',
       );
       retries += 1;
     }
