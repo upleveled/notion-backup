@@ -24,7 +24,7 @@ jobs:
         run: pnpm install
 
       - name: Run backup script
-        run: pnpm tsx index.ts
+        run: node index.ts
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
 
