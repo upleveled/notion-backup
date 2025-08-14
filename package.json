@@ -15,8 +15,8 @@
     "p-map": "7.0.3"
   },
   "devDependencies": {
-    "eslint": "9.32.0",
-    "eslint-config-upleveled": "9.2.12",
+    "eslint": "9.33.0",
+    "eslint-config-upleveled": "9.2.13",
     "prettier": "3.6.2",
     "typescript": "5.9.2"
   },
