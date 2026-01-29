@@ -16,11 +16,11 @@
   },
   "devDependencies": {
     "eslint": "9.39.2",
-    "eslint-config-upleveled": "9.4.2",
-    "prettier": "3.8.0",
+    "eslint-config-upleveled": "9.4.4",
+    "prettier": "3.8.1",
     "typescript": "5.9.3"
   },
-  "packageManager": "pnpm@10.28.0",
+  "packageManager": "pnpm@10.28.1",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
