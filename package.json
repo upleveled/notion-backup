@@ -15,12 +15,12 @@
     "p-map": "7.0.4"
   },
   "devDependencies": {
-    "eslint": "10.0.2",
+    "eslint": "10.0.3",
     "eslint-config-upleveled": "9.4.8",
     "prettier": "3.8.1",
     "typescript": "5.9.3"
   },
-  "packageManager": "pnpm@10.30.3",
+  "packageManager": "pnpm@10.32.1",
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
