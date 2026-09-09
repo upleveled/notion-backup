@@ -4,7 +4,7 @@ allowBuilds:
   esbuild: true
   unrs-resolver: true
 
-# Prevents installation of packages newer than 7 days
+# Prevent installation of packages newer than 7 days
 # to mitigate supply chain risks
 # - https://pnpm.io/settings#minimumreleaseage
 minimumReleaseAge: 10080
