@@ -2,7 +2,7 @@
 # - https://pnpm.io/settings#allowbuilds
 allowBuilds:
   esbuild: true
-  unrs-resolver: true
+  unrs-resolver: false
 
 # Prevent installation of packages newer than 7 days
 # to mitigate supply chain risks
