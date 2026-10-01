@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "eslint": "10.11.0",
-    "eslint-config-upleveled": "10.0.4",
+    "eslint-config-upleveled": "11.0.0",
     "prettier": "3.9.9",
     "typescript": "6.0.3"
   },
