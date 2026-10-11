@@ -11,4 +11,5 @@ minimumReleaseAge: 10080
 minimumReleaseAgeExclude:
   - '@upleveled/*'
   - eslint-config-upleveled
+  - eslint-plugin-upleveled
   - stylelint-config-upleveled
