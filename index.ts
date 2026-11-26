@@ -126,10 +126,12 @@ for (const [spaceId, spaceBlocks] of Object.entries(
       const {
         data: { results: tasks },
         headers: { 'set-cookie': getTasksRequestCookies },
-      }: { data: { results: Task[] }; headers: { 'set-cookie': string[] } } =
-        await client.post('getTasks', {
-          taskIds: Object.keys(incompleteEnqueuedBlocksByTaskId),
-        });
+      }: {
+        data: { results: Task[] };
+        headers: { 'set-cookie': string[] };
+      } = await client.post('getTasks', {
+        taskIds: Object.keys(incompleteEnqueuedBlocksByTaskId),
+      });
 
       for (const task of tasks) {
         const block = incompleteEnqueuedBlocksByTaskId[task.id];
