@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process';
-import { createWriteStream, mkdtempSync, renameSync, rmSync } from 'node:fs';
+import { createWriteStream, rmSync, unlinkSync } from 'node:fs';
 import path from 'node:path';
 import type { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
@@ -179,6 +179,12 @@ for (const [spaceId, spaceBlocks] of Object.entries(
             block.dirName,
           );
 
+          const temporaryZipPath = path.join(
+            process.cwd(),
+            'exports',
+            `${block.dirName}.zip`,
+          );
+
           console.log(`Export finished for ${block.dirName}`);
 
           const response = await client<Readable>({
@@ -196,26 +202,18 @@ for (const [spaceId, spaceBlocks] of Object.entries(
             Number(response.headers['content-length']) / 1000 / 1000;
           console.log(`Downloading ${Math.round(sizeInMb * 1000) / 1000}mb...`);
 
-          const temporaryDirPath = mkdtempSync(`${backupDirPath}-`);
-          try {
-            const temporaryZipPath = path.join(temporaryDirPath, 'export.zip');
-            const extractedDirPath = path.join(temporaryDirPath, 'extracted');
-            await pipeline(response.data, createWriteStream(temporaryZipPath));
+          await pipeline(response.data, createWriteStream(temporaryZipPath));
 
-            await execFileAsync('unzip', [
-              '-oq',
-              temporaryZipPath,
-              '-x',
-              '__MACOSX/*',
-              '-d',
-              extractedDirPath,
-            ]);
-
-            rmSync(backupDirPath, { recursive: true, force: true });
-            renameSync(extractedDirPath, backupDirPath);
-          } finally {
-            rmSync(temporaryDirPath, { recursive: true, force: true });
-          }
+          rmSync(backupDirPath, { recursive: true, force: true });
+          await execFileAsync('unzip', [
+            '-oq',
+            temporaryZipPath,
+            '-x',
+            '__MACOSX/*',
+            '-d',
+            backupDirPath,
+          ]);
+          unlinkSync(temporaryZipPath);
 
           console.log(`✅ Export of ${block.dirName} downloaded and unzipped`);
         }
