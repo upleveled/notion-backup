@@ -5,7 +5,8 @@
     "target": "es2022",
     "module": "node16",
     "moduleResolution": "node16",
-    "checkJs": true
+    "checkJs": true,
+    "types": ["node"]
   },
   "include": [
     "**/*.ts",
