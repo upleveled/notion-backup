@@ -1,7 +1,8 @@
 import { execFile } from 'node:child_process';
 import { createWriteStream, rmSync, unlinkSync } from 'node:fs';
 import path from 'node:path';
-import { Stream } from 'node:stream';
+import type { Readable } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
 import { promisify } from 'node:util';
 import axios from 'axios';
 import pMap from 'p-map';
@@ -186,7 +187,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
           console.log(`Export finished for ${block.dirName}`);
 
-          const response = await client<Stream>({
+          const response = await client<Readable>({
             method: 'GET',
             url: block.task.status.exportURL || undefined,
             responseType: 'stream',
@@ -201,14 +202,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
             Number(response.headers['content-length']) / 1000 / 1000;
           console.log(`Downloading ${Math.round(sizeInMb * 1000) / 1000}mb...`);
 
-          const stream = response.data.pipe(
-            createWriteStream(temporaryZipPath),
-          );
-
-          await new Promise((resolve, reject) => {
-            stream.on('close', resolve);
-            stream.on('error', reject);
-          });
+          await pipeline(response.data, createWriteStream(temporaryZipPath));
 
           rmSync(backupDirPath, { recursive: true, force: true });
           await execFileAsync('unzip', [
