@@ -209,6 +209,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
               '-d',
               extractedDirPath,
             ]);
+
             rmSync(backupDirPath, { recursive: true, force: true });
             renameSync(extractedDirPath, backupDirPath);
           } finally {
