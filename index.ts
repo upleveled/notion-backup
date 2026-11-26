@@ -124,14 +124,14 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
     try {
       const {
-        data: { results },
+        data: { results: tasks },
         headers: { 'set-cookie': getTasksRequestCookies },
       }: { data: { results: Task[] }; headers: { 'set-cookie': string[] } } =
         await client.post('getTasks', {
           taskIds: taskIds,
         });
 
-      for (const task of results) {
+      for (const task of tasks) {
         const block = incompleteEnqueuedBlocks.find(
           ({ taskId }) => taskId === task.id,
         );
