@@ -198,6 +198,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
             const temporaryZipPath = path.join(temporaryDirPath, 'export.zip');
             const extractedDirPath = path.join(temporaryDirPath, 'extracted');
             await pipeline(response.data, createWriteStream(temporaryZipPath));
+
             await execFileAsync('unzip', [
               '-oq',
               temporaryZipPath,
@@ -206,6 +207,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
               '-d',
               extractedDirPath,
             ]);
+
             rmSync(backupDirPath, { recursive: true, force: true });
             renameSync(extractedDirPath, backupDirPath);
           } finally {
