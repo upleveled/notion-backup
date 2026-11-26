@@ -218,7 +218,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
     }
 
     // Rate limit polling, with incremental backoff
-    await delay(1000 + 1000 * retries);
+    await delay(Math.min(10_000 + 2_000 * retries, 30_000));
   }
 }
 
