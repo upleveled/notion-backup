@@ -187,8 +187,6 @@ for (const [spaceId, spaceBlocks] of Object.entries(
           ]);
           unlinkSync(temporaryZipPath);
 
-          // Mutate original object in enqueuedBlocks for while
-          // loop exit condition
           block.zipExtracted = true;
           console.log(`✅ Export of ${block.dirName} downloaded and unzipped`);
         }
