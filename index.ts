@@ -1,9 +1,12 @@
-import { createWriteStream, mkdirSync, rmSync, unlinkSync } from 'node:fs';
+import { execFile } from 'node:child_process';
+import { createWriteStream, rmSync, unlinkSync } from 'node:fs';
 import path from 'node:path';
 import { Stream } from 'node:stream';
+import { promisify } from 'node:util';
 import axios from 'axios';
-import extract from 'extract-zip';
 import pMap from 'p-map';
+
+const execFileAsync = promisify(execFile);
 
 const blocks = [
   {
@@ -208,8 +211,14 @@ for (const [spaceId, spaceBlocks] of Object.entries(
           });
 
           rmSync(backupDirPath, { recursive: true, force: true });
-          mkdirSync(backupDirPath, { recursive: true });
-          await extract(temporaryZipPath, { dir: backupDirPath });
+          await execFileAsync('unzip', [
+            '-oq',
+            temporaryZipPath,
+            '-x',
+            '__MACOSX/*',
+            '-d',
+            backupDirPath,
+          ]);
           unlinkSync(temporaryZipPath);
 
           console.log(`✅ Export of ${block.dirName} downloaded and unzipped`);
