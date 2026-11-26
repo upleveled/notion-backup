@@ -42,11 +42,7 @@ if (!process.env.NOTION_TOKEN) {
 
 type BlockTask = {
   id: string;
-  state: string | null;
-  status: {
-    pagesExported: number | null;
-    exportURL: string | null;
-  };
+  state: 'success' | null;
 };
 
 type Task = {
@@ -117,10 +113,6 @@ for (const [spaceId, spaceBlocks] of Object.entries(
     const task: BlockTask = {
       id: taskId,
       state: null,
-      status: {
-        pagesExported: null,
-        exportURL: null,
-      },
     };
 
     return {
@@ -148,28 +140,20 @@ for (const [spaceId, spaceBlocks] of Object.entries(
           taskIds: taskIds,
         });
 
-      const blocksWithTaskProgress = results.flatMap((task) => {
-        const block = enqueuedBlocks.find(({ task: { id } }) => id === task.id);
+      for (const task of results) {
+        const block = incompleteEnqueuedBlocks.find(
+          ({ task: { id } }) => id === task.id,
+        );
 
-        if (!block || !task.status) return [];
+        if (!block || !task.status) continue;
 
-        // Mutate original object in enqueuedBlocks for while
-        // loop exit condition
-        if (task.state !== 'success') block.task.state = task.state;
-        block.task.status.pagesExported = task.status.pagesExported;
-        block.task.status.exportURL = task.status.exportURL;
-
-        return [{ block, state: task.state }];
-      });
-
-      for (const { block, state } of blocksWithTaskProgress) {
-        if (typeof block.task.status.pagesExported === 'number') {
+        if (typeof task.status.pagesExported === 'number') {
           console.log(
-            `Exported ${block.task.status.pagesExported} pages for ${block.dirName}`,
+            `Exported ${task.status.pagesExported} pages for ${block.dirName}`,
           );
         }
 
-        if (state === 'success') {
+        if (task.state === 'success') {
           const backupDirPath = path.join(
             process.cwd(),
             'exports',
@@ -186,7 +170,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
           const response = await client<Readable>({
             method: 'GET',
-            url: block.task.status.exportURL || undefined,
+            url: task.status.exportURL || undefined,
             responseType: 'stream',
             headers: {
               Cookie: getTasksRequestCookies.find((cookie) =>
@@ -212,6 +196,8 @@ for (const [spaceId, spaceBlocks] of Object.entries(
           ]);
           unlinkSync(temporaryZipPath);
 
+          // Mutate original object in enqueuedBlocks for while
+          // loop exit condition
           block.task.state = 'success';
           console.log(`✅ Export of ${block.dirName} downloaded and unzipped`);
         }
