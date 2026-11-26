@@ -40,11 +40,6 @@ if (!process.env.NOTION_TOKEN) {
   process.exit(1);
 }
 
-type BlockTask = {
-  id: string;
-  state: 'success' | null;
-};
-
 type Task = {
   id: string;
   state: string | null;
@@ -110,14 +105,10 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
     console.log(`Started export of block ${block.dirName} as task ${taskId}`);
 
-    const task: BlockTask = {
-      id: taskId,
-      state: null,
-    };
-
     return {
       ...block,
-      task: task,
+      taskId,
+      backupSaved: false,
     };
   });
 
@@ -126,10 +117,10 @@ for (const [spaceId, spaceBlocks] of Object.entries(
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   while (true) {
     const incompleteEnqueuedBlocks = enqueuedBlocks.filter(
-      ({ task }) => task.state !== 'success',
+      ({ backupSaved }) => !backupSaved,
     );
 
-    const taskIds = incompleteEnqueuedBlocks.map(({ task }) => task.id);
+    const taskIds = incompleteEnqueuedBlocks.map(({ taskId }) => taskId);
 
     try {
       const {
@@ -142,7 +133,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
       for (const task of results) {
         const block = incompleteEnqueuedBlocks.find(
-          ({ task: { id } }) => id === task.id,
+          ({ taskId }) => taskId === task.id,
         );
 
         if (!block || !task.status) continue;
@@ -198,13 +189,13 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
           // Mutate original object in enqueuedBlocks for while
           // loop exit condition
-          block.task.state = 'success';
+          block.backupSaved = true;
           console.log(`✅ Export of ${block.dirName} downloaded and unzipped`);
         }
       }
 
       // If all blocks are done, break out of the loop
-      if (!enqueuedBlocks.find(({ task }) => task.state !== 'success')) {
+      if (enqueuedBlocks.every(({ backupSaved }) => backupSaved)) {
         break;
       }
 
