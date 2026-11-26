@@ -202,10 +202,12 @@ for (const [spaceId, spaceBlocks] of Object.entries(
             const stream = response.data.pipe(
               createWriteStream(temporaryZipPath),
             );
+
             await new Promise((resolve, reject) => {
               stream.on('close', resolve);
               stream.on('error', reject);
             });
+
             await execFileAsync('unzip', [
               '-oq',
               temporaryZipPath,
@@ -214,6 +216,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
               '-d',
               extractedDirPath,
             ]);
+
             rmSync(backupDirPath, { recursive: true, force: true });
             renameSync(extractedDirPath, backupDirPath);
           } finally {
