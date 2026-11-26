@@ -108,7 +108,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
     return {
       ...block,
       taskId,
-      backupSaved: false,
+      zipExtracted: false,
     };
   });
 
@@ -117,7 +117,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   while (true) {
     const incompleteEnqueuedBlocks = enqueuedBlocks.filter(
-      ({ backupSaved }) => !backupSaved,
+      ({ zipExtracted }) => !zipExtracted,
     );
 
     const taskIds = incompleteEnqueuedBlocks.map(({ taskId }) => taskId);
@@ -189,13 +189,13 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
           // Mutate original object in enqueuedBlocks for while
           // loop exit condition
-          block.backupSaved = true;
+          block.zipExtracted = true;
           console.log(`✅ Export of ${block.dirName} downloaded and unzipped`);
         }
       }
 
       // If all blocks are done, break out of the loop
-      if (enqueuedBlocks.every(({ backupSaved }) => backupSaved)) {
+      if (enqueuedBlocks.every(({ zipExtracted }) => zipExtracted)) {
         break;
       }
 
