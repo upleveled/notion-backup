@@ -1,8 +1,7 @@
 import { execFile } from 'node:child_process';
 import { createWriteStream, mkdtempSync, renameSync, rmSync } from 'node:fs';
 import path from 'node:path';
-import type { Readable } from 'node:stream';
-import { pipeline } from 'node:stream/promises';
+import { Stream } from 'node:stream';
 import { promisify } from 'node:util';
 import axios from 'axios';
 import pMap from 'p-map';
@@ -148,28 +147,31 @@ for (const [spaceId, spaceBlocks] of Object.entries(
           taskIds: taskIds,
         });
 
-      const blocksWithTaskProgress = results.flatMap((task) => {
-        const block = enqueuedBlocks.find(({ task: { id } }) => id === task.id);
-
-        if (!block || !task.status) return [];
-
-        // Mutate original object in enqueuedBlocks for while
-        // loop exit condition
-        if (task.state !== 'success') block.task.state = task.state;
-        block.task.status.pagesExported = task.status.pagesExported;
-        block.task.status.exportURL = task.status.exportURL;
-
-        return [{ block, state: task.state }];
-      });
-
-      for (const { block, state } of blocksWithTaskProgress) {
-        if (typeof block.task.status.pagesExported === 'number') {
-          console.log(
-            `Exported ${block.task.status.pagesExported} pages for ${block.dirName}`,
+      const blocksWithTaskProgress = results.reduce(
+        (blocksAcc, task) => {
+          const block = enqueuedBlocks.find(
+            ({ task: { id } }) => id === task.id,
           );
-        }
 
-        if (state === 'success') {
+          if (!block || !task.status) return blocksAcc;
+
+          // Mutate original object in enqueuedBlocks for while
+          // loop exit condition
+          block.task.state = task.state;
+          block.task.status.pagesExported = task.status.pagesExported;
+          block.task.status.exportURL = task.status.exportURL;
+
+          return blocksAcc.concat(block);
+        },
+        [] as typeof incompleteEnqueuedBlocks,
+      );
+
+      for (const block of blocksWithTaskProgress) {
+        console.log(
+          `Exported ${block.task.status.pagesExported} pages for ${block.dirName}`,
+        );
+
+        if (block.task.state === 'success') {
           const backupDirPath = path.join(
             process.cwd(),
             'exports',
@@ -178,7 +180,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
           console.log(`Export finished for ${block.dirName}`);
 
-          const response = await client<Readable>({
+          const response = await client<Stream>({
             method: 'GET',
             url: block.task.status.exportURL || undefined,
             responseType: 'stream',
@@ -197,7 +199,13 @@ for (const [spaceId, spaceBlocks] of Object.entries(
           try {
             const temporaryZipPath = path.join(temporaryDirPath, 'export.zip');
             const extractedDirPath = path.join(temporaryDirPath, 'extracted');
-            await pipeline(response.data, createWriteStream(temporaryZipPath));
+            const stream = response.data.pipe(
+              createWriteStream(temporaryZipPath),
+            );
+            await new Promise((resolve, reject) => {
+              stream.on('close', resolve);
+              stream.on('error', reject);
+            });
             await execFileAsync('unzip', [
               '-oq',
               temporaryZipPath,
@@ -212,7 +220,6 @@ for (const [spaceId, spaceBlocks] of Object.entries(
             rmSync(temporaryDirPath, { recursive: true, force: true });
           }
 
-          block.task.state = 'success';
           console.log(`✅ Export of ${block.dirName} downloaded and unzipped`);
         }
       }
