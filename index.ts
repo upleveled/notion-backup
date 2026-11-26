@@ -116,11 +116,11 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   while (true) {
-    const incompleteEnqueuedBlocks = enqueuedBlocks.filter(
-      ({ zipExtracted }) => !zipExtracted,
+    const incompleteEnqueuedBlocksByTaskId = Object.fromEntries(
+      enqueuedBlocks
+        .filter(({ zipExtracted }) => !zipExtracted)
+        .map((block) => [block.taskId, block]),
     );
-
-    const taskIds = incompleteEnqueuedBlocks.map(({ taskId }) => taskId);
 
     try {
       const {
@@ -128,13 +128,11 @@ for (const [spaceId, spaceBlocks] of Object.entries(
         headers: { 'set-cookie': getTasksRequestCookies },
       }: { data: { results: Task[] }; headers: { 'set-cookie': string[] } } =
         await client.post('getTasks', {
-          taskIds: taskIds,
+          taskIds: Object.keys(incompleteEnqueuedBlocksByTaskId),
         });
 
       for (const task of tasks) {
-        const block = incompleteEnqueuedBlocks.find(
-          ({ taskId }) => taskId === task.id,
-        );
+        const block = incompleteEnqueuedBlocksByTaskId[task.id];
 
         if (!block || !task.status) continue;
 
