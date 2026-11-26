@@ -40,15 +40,6 @@ if (!process.env.NOTION_TOKEN) {
   process.exit(1);
 }
 
-type BlockTask = {
-  id: string;
-  state: string | null;
-  status: {
-    pagesExported: number | null;
-    exportURL: string | null;
-  };
-};
-
 type Task = {
   id: string;
   state: string | null;
@@ -114,18 +105,10 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
     console.log(`Started export of block ${block.dirName} as task ${taskId}`);
 
-    const task: BlockTask = {
-      id: taskId,
-      state: null,
-      status: {
-        pagesExported: null,
-        exportURL: null,
-      },
-    };
-
     return {
       ...block,
-      task: task,
+      taskId,
+      zipExtracted: false,
     };
   });
 
@@ -133,46 +116,35 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   while (true) {
-    const incompleteEnqueuedBlocks = enqueuedBlocks.filter(
-      ({ task }) => task.state !== 'success',
+    const taskIdsToIncompleteEnqueuedBlocks = Object.fromEntries(
+      enqueuedBlocks
+        .filter(({ zipExtracted }) => !zipExtracted)
+        .map((block) => [block.taskId, block]),
     );
-
-    const taskIds = incompleteEnqueuedBlocks.map(({ task }) => task.id);
 
     try {
       const {
-        data: { results },
+        data: { results: tasks },
         headers: { 'set-cookie': getTasksRequestCookies },
-      }: { data: { results: Task[] }; headers: { 'set-cookie': string[] } } =
-        await client.post('getTasks', {
-          taskIds: taskIds,
-        });
+      }: {
+        data: { results: Task[] };
+        headers: { 'set-cookie': string[] };
+      } = await client.post('getTasks', {
+        taskIds: Object.keys(taskIdsToIncompleteEnqueuedBlocks),
+      });
 
-      const blocksWithTaskProgress = results.reduce(
-        (blocksAcc, task) => {
-          const block = enqueuedBlocks.find(
-            ({ task: { id } }) => id === task.id,
+      for (const task of tasks) {
+        const block = taskIdsToIncompleteEnqueuedBlocks[task.id];
+
+        if (!block || !task.status) continue;
+
+        if (typeof task.status.pagesExported === 'number') {
+          console.log(
+            `Exported ${task.status.pagesExported} pages for ${block.dirName}`,
           );
+        }
 
-          if (!block || !task.status) return blocksAcc;
-
-          // Mutate original object in enqueuedBlocks for while
-          // loop exit condition
-          block.task.state = task.state;
-          block.task.status.pagesExported = task.status.pagesExported;
-          block.task.status.exportURL = task.status.exportURL;
-
-          return blocksAcc.concat(block);
-        },
-        [] as typeof incompleteEnqueuedBlocks,
-      );
-
-      for (const block of blocksWithTaskProgress) {
-        console.log(
-          `Exported ${block.task.status.pagesExported} pages for ${block.dirName}`,
-        );
-
-        if (block.task.state === 'success') {
+        if (task.state === 'success') {
           const backupDirPath = path.join(
             process.cwd(),
             'exports',
@@ -189,7 +161,7 @@ for (const [spaceId, spaceBlocks] of Object.entries(
 
           const response = await client<Readable>({
             method: 'GET',
-            url: block.task.status.exportURL || undefined,
+            url: task.status.exportURL || undefined,
             responseType: 'stream',
             headers: {
               Cookie: getTasksRequestCookies.find((cookie) =>
@@ -215,12 +187,13 @@ for (const [spaceId, spaceBlocks] of Object.entries(
           ]);
           unlinkSync(temporaryZipPath);
 
+          block.zipExtracted = true;
           console.log(`✅ Export of ${block.dirName} downloaded and unzipped`);
         }
       }
 
       // If all blocks are done, break out of the loop
-      if (!enqueuedBlocks.find(({ task }) => task.state !== 'success')) {
+      if (enqueuedBlocks.every(({ zipExtracted }) => zipExtracted)) {
         break;
       }
 
